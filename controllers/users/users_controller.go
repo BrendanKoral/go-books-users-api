@@ -1,12 +1,28 @@
 package users
 
 import (
+	"github.com/brendankoral/go-books-users-api/domain/users"
+	"github.com/brendankoral/go-books-users-api/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func CreateUser(c *gin.Context) {
-	c.String(http.StatusNotImplemented, "Implement me!")
+	var user users.User
+
+	if err := c.ShouldBindJSON(&user); err != nil {
+		//TODO: handle JSON error
+		//TODO: return bad request to caller
+		return
+	}
+
+	result, saveErr := services.CreateUser(user)
+	if saveErr != nil {
+		//TODO: handle user creation error
+		return
+	}
+
+	c.JSON(http.StatusCreated, result)
 }
 
 func GetUser(c *gin.Context) {
